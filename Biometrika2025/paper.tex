@@ -377,9 +377,9 @@ The competition mechanism is not unique to CP width. Any scalar selection criter
 Assumptions~1--4 hold for $M$-estimators but are heuristic for tree-based methods. While a formal verification for tree-based estimators is beyond the present scope, the empirical agreement between $\hat\kappa$ and $\Delta$ across Random Forest, XGBoost and SVR (Appendix~3) suggests the index may be more broadly applicable; this provides a direction for future theoretical extension. The index $\kappa$ is predictive only when the population argmins agree (Theorem~1); under bias crossing, $\hat\kappa$ is uninformative. The split-sample diagnostic of \S4.3 provides a practical safeguard; developing a formal statistical test for regime membership is left to future work, along with extensions to classification and distribution shift. The results suggest a distinction between uncertainty quantification and decision diagnostics: coverage validity does not guarantee reliable ranking, and $\kappa$ quantifies the resolution needed for the latter.
 
 \section*{Data availability}
-The real datasets used in \S6 and Appendix~3---Boston Housing, Concrete Compressive Strength, Abalone and Wine Quality---are publicly available from the UCI Machine Learning Repository \citep[\href{https://archive.ics.uci.edu}{https://archive.ics.uci.edu}]{UCI:2025}.  Simulation code is available at \href{https://github.com/wyp629929/A-comparison-index-for-functional-ranking-in-model-selection}{github.com/wyp629929/functional-ranking}.
+The real datasets used in \S5.4 and Appendix~3---Boston Housing, Concrete Compressive Strength, Abalone and Wine Quality---are publicly available from the UCI Machine Learning Repository \citep[\href{https://archive.ics.uci.edu}{https://archive.ics.uci.edu}]{UCI:2025}.  Simulation code is available at \href{https://github.com/wyp629929/A-comparison-index-for-functional-ranking-in-model-selection}{github.com/wyp629929/functional-ranking}.
 
-\section*{Declaration of the use of generative AI and AI-assisted technologies}
+\section*{Declaration of AI use}
 During the preparation of this work the author used Claude Code (Anthropic) in order to assist with coding, editing and literature review. After using this tool the author reviewed and edited the content as necessary and takes full responsibility for the content of the publication.
 
 \section*{Supplementary material}
@@ -513,6 +513,7 @@ Wine & 1000 & 0.483 & 2.36
 \clearpage
 
 \textbf{Training MSE as selection functional.}
+
 \begin{table}[h!]
 \small
 \tbl{Training MSE versus test MSE}
