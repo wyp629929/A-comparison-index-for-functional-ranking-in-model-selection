@@ -121,7 +121,7 @@ and $\Phi(-\kappa_{ij}) \leq \exp(-\kappa_{ij}^2/2)$. Thus $\kappa_{ij}^2/2$ is 
 \end{proposition}
 
 \begin{proof}
-By Assumption~4, $n^{1/2}(T_{i,n} - T_{j,n})$ is asymptotically normal with mean $n^{1/2}(T_i^\infty - T_j^\infty)$ and variance $\sigma_{ij}^2$. Standardizing gives $Z_{ij}^{(n)} \xrightarrow{d} N(\kappa_{ij}, 1)$. The Gaussian tail bound is standard.
+By Assumption~4, $n^{1/2}(T_{i,n} - T_{j,n})$ is asymptotically normal with mean $n^{1/2}(T_i^\infty - T_j^\infty)$ and variance $\sigma_{ij}^2$. Standardizing gives $Z_{ij}^{(n)} \xrightarrow{d} N(\kappa_{ij}, 1)$. The Mills ratio bound $\Phi(-x) \leq (2\pi)^{-1/2} x^{-1} e^{-x^2/2}$ for $x>0$ gives $\Phi(-\kappa_{ij}) \leq \exp(-\kappa_{ij}^2/2)$.
 \end{proof}
 
 \subsection{Optimality of $\kappa$}
@@ -189,7 +189,7 @@ Under the Gaussian shift experiment of Proposition~1, the misranking probability
 where $B_{ij}$ collects the third-order cumulants of the influence functions $\psi_i,\psi_j$. The leading correction vanishes when the influence functions are symmetric, which occurs for $M$-estimators with symmetric error distributions. This refinement shows that while $\kappa_{ij}$ determines the exponential rate, the sub-leading constant can depend on the specific functional form of $T$.
 \end{remark}
 
-\subsection{Example 2: AIC for nested models}
+\subsection{AIC for nested models}
 
 The Akaike information criterion is $T_{k,n} = \log L_k - p_k$, where $L_k$ is the maximized likelihood and $p_k$ the number of parameters. For linear regression with Gaussian errors, the difference between a full model ($p$ features) and a restricted model ($s$ features) is
 \[
@@ -218,7 +218,7 @@ For nested models, $\kappa_{ij}$ can be expressed through the non-centrality par
 
 The framework applies to any scalar selection functional with a Bahadur-type expansion: AIC, BIC, CV, and WAIC all induce the same Gaussian comparison structure. The bias-crossing versus competition dichotomy is universal: any marginal summary faces both a structural floor and a finite-sample resolution limit. An illustration with training MSE is given in Appendix~3.
 
-\section{Example 1: Conformal prediction width}
+\section{Conformal prediction width}
 
 \subsection{Assumption verification}
 
@@ -306,7 +306,7 @@ As $\rho$ increases from $0$ to $0.75$, the gap narrows by a factor of $7$, $\ka
 \label{fig:decay}
 \end{figure}
 
-\textbf{Results.} This experiment illustrates the competition window (\S2). At $n=50$, $\Delta \approx 0$ because the restricted estimator is clearly worse. As $n$ enters the competition window (100--200), the full estimator's variance shrinks, narrowing the effective gap and raising $\Delta$ to $\sim 0.37$---the worst misalignment occurs at intermediate $n$, not small $n$. At $n \geq 500$, dominance re-emerges and $\Delta$ decays. The estimated $\hat\kappa$ mirrors this non-monotonicity: $2.68$ at $n=50$, $0.93$ at $n=100$ (bottom of the competition window), $2.87$ at $n=1000$. Population $\kappa$ from $n_{\text{MC}} = 20000$ grows monotonically from $0.83$ to $3.37$, confirming that the non-monotonicity is a finite-sample phenomenon captured by the plug-in estimator rather than a property of the population index.
+\textbf{Results.} This experiment illustrates the competition window (\S2). At $n=50$, $\Delta \approx 0$ because the restricted estimator is clearly worse. As $n$ enters the competition window (100--200), the full estimator's variance shrinks, narrowing the effective gap and raising $\Delta$ to $\sim 0.37$. The worst misalignment occurs at intermediate $n$, not small $n$. At $n \geq 500$, dominance re-emerges and $\Delta$ decays. The estimated $\hat\kappa$ mirrors this non-monotonicity: $2.68$ at $n=50$, $0.93$ at $n=100$ (the bottom of the competition window) and $2.87$ at $n=1000$. Population $\kappa$ from $n_{\text{MC}} = 20000$ grows monotonically from $0.83$ to $3.37$, confirming that the non-monotonicity is a finite-sample phenomenon captured by the plug-in estimator rather than a property of the population index.
 
 \subsection{Real-data validation}
 
@@ -350,7 +350,7 @@ $n$ & $\Delta$ & $r(\kappa,\Delta)$ & $r(\text{CV},\Delta)$ \\ \hline
 
 \section{Estimation}
 
-The plug-in estimator $\hat\kappa$ targets $\sqrt{n_{\text{cal}}}\cdot\kappa$. From calibration residuals:
+The plug-in estimator $\hat\kappa$ targets $\sqrt{n_{\text{cal}}}\cdot\kappa$. Given calibration residuals $\{r_{k,i}\}$ and fitted estimators, the estimate is computed as follows:
 \begin{enumerate}
 \item Compute $\hat R_k = 2\cdot\text{Quantile}_{1-\alpha}(\{r_{k,i}\})$.
 \item Estimate $\hat\sigma_k = \text{Std}(\{y_i - \hat f_k(x_i)\})$ from raw residuals.
@@ -374,7 +374,7 @@ The CP literature has emphasized validity after selection \citep{Yang:2024,Hegaz
 
 The competition mechanism is not unique to CP width. Any scalar selection criterion---AIC, BIC, CV, WAIC---induces the same Gaussian comparison structure and incurs the same resolution-reliability tension. The bias-crossing versus competition dichotomy is universal: bias crossing is the structural floor of any marginal summary, while competition governs its finite-sample reliability. Extending $\kappa$ to these criteria requires only verifying Assumption~2 for the corresponding functional.
 
-Assumptions~1--4 hold for $M$-estimators but are heuristic for tree-based methods. While a formal verification for tree-based estimators is beyond the present scope, the empirical agreement between $\hat\kappa$ and $\Delta$ across Random Forest, XGBoost and SVR (Appendix~3) suggests the index may be more broadly applicable; this provides a direction for future theoretical extension. The index $\kappa$ is predictive only when the population argmins agree (Theorem~1); under bias crossing, $\hat\kappa$ is uninformative. The split-sample diagnostic of \S4.3 provides a practical safeguard; developing a formal statistical test for regime membership is left to future work, along with extensions to classification and distribution shift. The results suggest a distinction between uncertainty quantification and decision diagnostics: coverage validity does not guarantee reliable ranking, and $\kappa$ quantifies the resolution needed for the latter.
+Assumptions~1--4 hold for $M$-estimators but are heuristic for tree-based methods. While a formal verification for tree-based estimators is beyond the present scope, the empirical agreement between $\hat\kappa$ and $\Delta$ across Random Forest, XGBoost and SVR (Appendix~3) suggests the index may be more broadly applicable; this provides a direction for future theoretical extension. The index $\kappa$ is predictive only when the population argmins agree (Theorem~1); under bias crossing, $\hat\kappa$ is uninformative. The split-sample diagnostic of \S4.3 provides a practical safeguard; developing a formal statistical test for regime membership is left to future work, along with extensions to classification and distribution shift. Taken together, these results frame model selection reliability as a problem of experimental resolution rather than a problem of optimal estimation: the relevant question is not which estimator has lower risk asymptotically, but whether the selection functional can distinguish the contenders at the available sample size. The comparison index $\kappa$ provides a practical resolution measure for this question.
 
 \section*{Data availability}
 The real datasets used in \S5.4 and Appendix~3---Boston Housing, Concrete Compressive Strength, Abalone and Wine Quality---are publicly available from the UCI Machine Learning Repository \citep[\href{https://archive.ics.uci.edu}{https://archive.ics.uci.edu}]{UCI:2025}.  Simulation code is available at \href{https://github.com/wyp629929/A-comparison-index-for-functional-ranking-in-model-selection}{github.com/wyp629929/functional-ranking}.
