@@ -236,7 +236,7 @@ The comparison index for CP width specializes to
 \]
 
 \begin{corollary}[Dependence modulation]\label{cor:dep}
-Under block-equicorrelated predictors, $\partial\kappa/\partial\rho < 0$ for sets containing both linear and tree-based estimators, implying $\partial\Delta_n/\partial\rho > 0$. For purely linear sets, $\partial\kappa/\partial\rho \approx 0$.
+Under block-equicorrelated predictors, $\partial\kappa/\partial\rho < 0$ for sets containing both linear and tree-based estimators, implying $\partial\Delta_n/\partial\rho > 0$. For purely linear sets, the variation in $\hat\kappa$ across $\rho$ is within the Monte Carlo noise range (Table~6), consistent with $\partial\kappa/\partial\rho \approx 0$ at the population level.
 \end{corollary}
 
 \subsection{Diagnosing regime membership}
@@ -446,6 +446,7 @@ Heavy-tailed residuals produce $\hat\kappa$ within $15\%$ of normal at all $n$; 
 \section*{Appendix 3: Additional results}
 
 \textbf{CP level sensitivity.}
+The $\kappa$--$\Delta$ relationship is stable across $\alpha \in \{0.05, 0.10, 0.20\}$, confirming that the comparison index is not an artefact of a particular nominal level.
 \begin{table}[ht]
 \tbl{$\alpha$ sensitivity}
 {\begin{tabular}{ccrr}
@@ -464,6 +465,7 @@ $\alpha$ & $n$ & $\hat\kappa$ & $r(\kappa,\Delta)$ \\ \hline
 
 {\small
 \textbf{Estimator robustness.}
+Repeating the decay experiment with Lasso, SVR and XGBoost in place of the restricted OLS estimator shows that the $\kappa$--$\Delta$ correlation holds across estimator classes, including tree-based methods for which Assumption~1 is heuristic.
 \begin{table}[ht]
 \tbl{Estimator robustness}
 {\begin{tabular}{lcrr}
@@ -476,11 +478,12 @@ SVR & 500 & 2.82 & $-0.18$ \\
 SVR & 1000 & 3.43 & $-0.25$ \\
 XGBoost & 100 & 1.27 & $-0.36$ \\
 XGBoost & 500 & 2.96 & $-0.20$ \\
-XGBoost & 1000 & 3.88 & $-$
+XGBoost & 1000 & 3.88 & ---
 \end{tabular}}
 \end{table}
 
 \textbf{Additional datasets.}
+The $\kappa$--$\Delta$ correlation persists across four UCI datasets under the OLS-versus-Ridge design, with $\kappa$ ranging from $1.45$ (Abalone) to $4.84$ (Concrete).
 \begin{table}[ht]
 \small
 \tbl{Additional real data}
