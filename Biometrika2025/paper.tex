@@ -198,8 +198,8 @@ T_{f,n} - T_{r,n} = n(\log\hat\sigma_f^2 - \log\hat\sigma_r^2) - 2(p-s),
 where $\hat\sigma_k^2$ is the residual variance estimate. Table~1 shows the $\kappa$--$\Delta$ relationship for this setting: as $p$ grows, the penalty $2(p-s)$ dominates and $\kappa$ increases, driving $\Delta$ to zero.
 
 \begin{table}[ht]
-\tbl{AIC comparison: restricted ($s=3$) versus full ($p$) models, $n=500$}
-{\begin{tabular}{crr}
+\tbl{AIC comparison for nested models, $n=500$}
+{\begin{tabular}{ccr}
 $p$ & $\Delta$ & $\hat\kappa$ \\ \hline
 10 & 0.210 & 1.81 \\
 20 & 0.076 & 2.20 \\
@@ -207,6 +207,9 @@ $p$ & $\Delta$ & $\hat\kappa$ \\ \hline
 100 & 0.000 & 3.49 \\
 \end{tabular}}
 \label{tab:aic}
+\begin{tabnote}
+Restricted model has $s=3$ parameters; full model has $p$ parameters.
+\end{tabnote}
 \end{table}
 
 For nested models, $\kappa_{ij}$ can be expressed through the non-centrality parameter $\delta$ of the likelihood ratio statistic: $\kappa_{ij} \approx |\delta - d|/\{2\Var(\chi^2_d(\delta))\}^{1/2}$, where $d=p-s$. Selection is reliable when $\delta$ is large relative to $d$, and unreliable near $\delta \approx d$. Detailed derivations appear in the Supplementary Material.
@@ -236,8 +239,10 @@ The comparison index for CP width specializes to
 \]
 
 \begin{corollary}[Dependence modulation]\label{cor:dep}
-Under block-equicorrelated predictors, $\partial\kappa/\partial\rho < 0$ for sets containing both linear and tree-based estimators, implying $\partial\Delta_n/\partial\rho > 0$. For purely linear sets, the variation in $\hat\kappa$ across $\rho$ is within the Monte Carlo noise range (Table~6), consistent with $\partial\kappa/\partial\rho \approx 0$ at the population level.
+Under block-equicorrelated predictors, $\partial\kappa/\partial\rho < 0$ for sets containing both linear and tree-based estimators, implying $\partial\Delta_n/\partial\rho > 0$. For purely linear sets, $\partial\kappa/\partial\rho \approx 0$.
 \end{corollary}
+
+In the symmetric control experiment (Table~6), $\hat\kappa$ varies across $\rho$ within the Monte Carlo noise range, consistent with this approximation.
 
 \subsection{Diagnosing regime membership}
 
@@ -279,7 +284,7 @@ At $\kappa = 1.65$, misalignment is substantial ($\Delta = 0.45$); at $\kappa = 
 \begin{table}
 \tbl{Dependence modulation: OLS versus RF}
 {\begin{tabular}{cccccc}
-$\rho$ & $\hat R_{\text{OLS}}$ & $\hat R_{\text{RF}}$ & $\hat\kappa$ & $\Delta$ & SE \\ \hline
+$\rho$ & $\widehat{R}_{\text{OLS}}$ & $\widehat{R}_{\text{RF}}$ & $\hat\kappa$ & $\Delta$ & SE \\ \hline
 0.00 & 4.03 & 4.54 & 1.26 & 0.275 & 0.032 \\
 0.25 & 4.04 & 4.46 & 1.16 & 0.305 & 0.033 \\
 0.50 & 3.99 & 4.28 & 1.14 & 0.320 & 0.033 \\
@@ -407,12 +412,12 @@ establishing that $\Delta_n(T)$ cannot vanish asymptotically. This lower bound i
 \appendixtwo
 \section*{Appendix 2: Additional experiments}
 
-\textbf{Symmetric control.} OLS versus Ridge, $n=300$, same design as \S5.2.
+\textbf{Symmetric control:} OLS versus Ridge, $n=300$, same design as \S5.2.
 
 \begin{table}[ht]
 \tbl{Symmetric control: OLS versus Ridge}
 {\begin{tabular}{cccccc}
-$\rho$ & $\hat R_{\text{OLS}}$ & $\hat R_{\text{Ridge}}$ & $\hat\kappa$ & $\Delta$ & SE \\ \hline
+$\rho$ & $\widehat{R}_{\text{OLS}}$ & $\widehat{R}_{\text{Ridge}}$ & $\hat\kappa$ & $\Delta$ & SE \\ \hline
 0.00 & 3.96 & 3.94 & 2.40 & 0.270 & 0.026 \\
 0.25 & 3.93 & 3.90 & 2.38 & 0.300 & 0.026 \\
 0.50 & 3.96 & 3.93 & 2.37 & 0.267 & 0.026 \\
