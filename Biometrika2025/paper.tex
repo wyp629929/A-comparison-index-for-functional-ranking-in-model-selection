@@ -1,0 +1,527 @@
+\documentclass[lineno]{biometrika}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage[hyphens]{url}
+\usepackage{hyperref}
+
+\graphicspath{{./art/}}
+
+\def\Bka{{\it Biometrika}}
+\def\T{{ \mathrm{\scriptscriptstyle T} }}
+\DeclareMathOperator{\AVar}{AVar}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\argmin}{arg\,min}
+\DeclareMathOperator{\pr}{pr}
+\DeclareMathOperator{\Corr}{Corr}
+\DeclareMathOperator{\Cov}{Cov}
+
+\begin{document}
+
+\jname{Biometrika}
+\jyear{2025}
+\jvol{112}
+\jnum{1}
+\cyear{2025}
+
+\markboth{Yaoping~Wang}{Comparison index for functional ranking}
+
+\title{A comparison index for functional ranking in model selection}
+
+\author{Yaoping~Wang}
+\affil{Department of Statistics, Rutgers University,\\ Piscataway, New Jersey 08854, U.S.A.
+\email{yaoping.wang@rutgers.edu}}
+
+\maketitle
+
+\begin{abstract}
+The ranking induced by a scalar selection functional can disagree with the ranking induced by prediction risk. We show that misalignment exhibits a phase transition: when the population ordering agrees, the misranking probability decays exponentially at rate $\exp(-n\kappa^2/2)$, where $\kappa$ is the Le Cam discrimination parameter of the local asymptotic Gaussian experiment; when the population ordering disagrees, misalignment persists asymptotically. A finite-sample \textit{competition window} emerges at intermediate sample sizes, where the estimated comparison index $\hat\kappa$ is minimized and misalignment is maximized, producing a non-monotonic misalignment trajectory. The population comparison index $\kappa$ is monotonic in $n$; the non-monotonicity arises through the plug-in estimator $\hat\kappa$, which captures the changing finite-sample signal-to-noise ratio. The framework is developed for general selection functionals and illustrated for conformal prediction width and AIC, where $\kappa$ tracks observed misalignment across simulations and real data. The competition window provides a testable signature of the competition mechanism and distinguishes it from both structural bias-crossing and classical monotonic decay.
+\end{abstract}
+
+\begin{keywords}
+Asymptotic comparison; Conformal prediction; Gaussian shift experiment; Model selection; Signal-to-noise ratio.
+\end{keywords}
+
+\section{Introduction}
+
+Model selection requires choosing among candidate estimators based on observed data. A natural approach is to define a scalar selection functional $T$, such as prediction interval width, AIC, or cross-validated error, and choose the estimator that minimizes $T$. The reliability of this choice depends on whether the ranking induced by $T$ agrees with the ranking induced by prediction risk $D$. The disagreement probability
+\[
+\Delta_n(T) = \pr\!\left\{\argmin_k T_{k,n} \neq \argmin_k D_{k,n}\right\}
+\]
+is governed by two phenomena: structural misalignment when the population argmins differ, and finite-sample noise that can reverse the ranking even when the argmins agree.
+
+Both phenomena are characterized by a single comparison index
+\[
+\kappa_{ij} = \frac{|T_i^\infty - T_j^\infty|}{\{\AVar(T_i - T_j)\}^{1/2}},
+\]
+the Le Cam discrimination parameter of the functional difference under the local asymptotic Gaussian experiment. When the population argmins agree, the misranking probability decays as $\exp(-n\kappa^2/2)$. When they disagree, $\kappa$ is uninformative.
+
+A consequence of the $\kappa$-driven regime is the \textbf{competition window}: at intermediate sample sizes, the estimated index $\hat\kappa$ can decrease as the noisier estimator catches up, producing a non-monotonic misalignment trajectory that first rises and then falls. The population index $\kappa$ is monotonic; the non-monotonicity is a finite-sample phenomenon captured by the plug-in estimator. This behaviour contradicts the classical monotonic decay intuition and provides a distinguishing signature of the competition mechanism. The comparison of experiments framework \citep{LeCam:1986} provides the natural language: a selection functional induces a statistical experiment whose pairwise discrimination difficulty is measured by $\kappa$. This connects the asymptotic theory of model selection criteria \citep{Hastie:2009,Yang:2024} with the comparison of statistical functionals \citep{LeCam:1986,Bickel:2015}. The bias-crossing impossibility (Appendix~1) establishes a structural limitation; the present paper identifies finite-sample competition and its non-monotonic competition window as a second mechanism. The reliability of model selection is thus governed by a phase transition with a finite-sample competition window that classical asymptotic arguments cannot capture.
+
+\section{Problem setup}
+
+\subsection{The comparison index}
+
+Let $\mathcal{M} = \{1,\dots,m\}$ be a set of candidate estimators. Each $k\in\mathcal{M}$ is evaluated by a selection functional $T_{k,n}$ and a risk functional $D_{k,n}$, both converging to population limits $T_k^\infty$ and $D_k^\infty$ as $n\to\infty$.
+
+For any pair $(i,j)$, define the comparison index
+\begin{equation}
+\kappa_{ij} = \frac{|T_i^\infty - T_j^\infty|}{\sigma_{ij}},\qquad
+\sigma_{ij}^2 = \lim_{n\to\infty} n \,\Var(T_{i,n} - T_{j,n}).
+\end{equation}
+The minimum comparison index across all pairs is $\kappa = \min_{i\neq j}\kappa_{ij}$. When $\kappa_{ij}$ is large, the two functionals are well-separated relative to estimation noise; the ranking is stable. When $\kappa_{ij}$ is small, the estimators are nearly indistinguishable under $T$.
+
+A corollary of the $\kappa$--$n$ relationship is the \textbf{competition window}: an interval of sample sizes where the estimated index $\hat\kappa$ is minimized and misalignment is maximized. For two estimators with unequal variance, $\hat\kappa$---which estimates $\sqrt{n_{\text{cal}}}\cdot\kappa$---can decrease as $n$ increases from small to moderate values, because the noisier estimator's variance shrinks and narrows the relative gap, before increasing again at larger $n$ when the bias advantage dominates. The population $\kappa$ is monotonic; the non-monotonicity enters through the finite-sample scaling $\hat\kappa \approx \sqrt{n_{\text{cal}}}\cdot\kappa$. This is a hallmark of the competition regime.
+
+\subsection{Bias crossing as non-identifiability}
+
+If $\argmin_k T_k^\infty \neq \argmin_k D_k^\infty$, misalignment does not vanish as $n\to\infty$. This is a non-identifiability: the population limit of $T$ cannot distinguish which estimator minimizes $D$. Appendix~1 provides a self-contained lower bound: $\liminf\Delta_n(T) \geq \pr(X \in \mathcal{S}) > 0$ for a disagreement set $\mathcal{S}$. When the population argmins coincide, misalignment is a purely finite-sample phenomenon controlled by $\kappa$. The two cases are exhaustive under Assumption~3 below.
+
+\section{Asymptotic theory}
+
+\subsection{Regularity conditions}
+
+\begin{assumption}[Estimator convergence]\label{assn:conv}
+$n^{1/2}(\hat f_{k,n} - f_k^\infty)$ converges weakly to a mean-zero Gaussian process for each $k$, uniformly on compact sets.
+\end{assumption}
+
+\begin{assumption}[Functional regularity]\label{assn:bahadur}
+The limit $T_k^\infty = \lim_{n\to\infty} T_{k,n}$ exists and admits a Bahadur-type expansion
+\[
+T_{k,n} = T_k^\infty + \frac1n\sum_{i=1}^n \psi_k(Z_i) + o_p(n^{-1/2}),
+\]
+where $\psi_k$ is an influence function with $E(\psi_k)=0$ and $E(\psi_k^2)<\infty$.
+\end{assumption}
+
+\begin{assumption}[Unique argmins]\label{assn:unique}
+$T_k^\infty$ and $D_k^\infty$ have unique population argmins $k_T^*$ and $k_D^*$, respectively.
+\end{assumption}
+
+\begin{assumption}[Joint CLT]\label{assn:clt}
+The vector $n^{1/2}(T_{k,n} - T_k^\infty, D_{k,n} - D_k^\infty)_{k=1}^m$ converges to a $2m$-variate normal distribution with mean zero and covariance $\Sigma$.
+\end{assumption}
+
+Assumptions~1,~2 and~4 hold for $M$-estimators with linear influence functions under mild regularity. Section~4 verifies them for CP width.
+
+\subsection{Gaussian comparison}
+
+\begin{proposition}[Gaussian comparison of functionals]\label{prop:gauss}
+Under Assumptions~2 and~4, for any pair $(i,j)$,
+\[
+Z_{ij}^{(n)} = n^{1/2}\,\frac{T_{i,n} - T_{j,n}}{\sigma_{ij}} \;\xrightarrow{d}\; N(\kappa_{ij}, 1),
+\]
+where $\sigma_{ij}^2 = \AVar(T_i - T_j)$. The misranking probability satisfies
+\[
+\pr(T_{j,n} < T_{i,n} \mid T_i^\infty > T_j^\infty) = \Phi(-\kappa_{ij}) + o(1),
+\]
+and $\Phi(-\kappa_{ij}) \leq \exp(-\kappa_{ij}^2/2)$. Thus $\kappa_{ij}^2/2$ is the large-deviation rate (Chernoff, 1952).
+\end{proposition}
+
+\begin{proof}
+By Assumption~4, $n^{1/2}(T_{i,n} - T_{j,n})$ is asymptotically normal with mean $n^{1/2}(T_i^\infty - T_j^\infty)$ and variance $\sigma_{ij}^2$. Standardizing gives $Z_{ij}^{(n)} \xrightarrow{d} N(\kappa_{ij}, 1)$. The Gaussian tail bound is standard.
+\end{proof}
+
+\subsection{Optimality of $\kappa$}
+
+\begin{lemma}[LAN optimality]\label{lem:opt}
+Under the Gaussian shift experiment of Proposition~1, the misranking problem for pair $(i,j)$ reduces to testing $H_0: Z \sim N(-\kappa_{ij},1)$ versus $H_1: Z \sim N(\kappa_{ij},1)$.
+\begin{enumerate}
+\item[(i)] The minimal achievable misranking probability is $\Phi(-\kappa_{ij})$, attained by the likelihood ratio test. The large-deviation rate satisfies
+\[
+\lim_{n\to\infty} n^{-1}\log\pr(T_{j,n} < T_{i,n}) = -\kappa_{ij}^2/2,
+\]
+and no procedure can achieve a faster rate \citep{Chernoff:1952}.
+\item[(ii)] The parameter $\kappa_{ij}$ is the canonical summary of the limiting experiment: every decision rule has limiting risk that depends on the functional pair only through $\kappa_{ij}$, because the family $\{N(\kappa_{ij},1):\kappa_{ij}\geq0\}$ is a one-parameter exponential family with natural parameter $\kappa_{ij}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) By the Neyman--Pearson lemma, the most powerful test of $H_0$ versus $H_1$ rejects for large $Z$. The symmetric threshold $c=0$ yields Type-I error $\alpha = \Phi(-\kappa_{ij})$ and Type-II error $\beta = \Phi(-\kappa_{ij})$, giving equal-weighted misranking probability $\Phi(-\kappa_{ij})$. The Chernoff (1952) large-deviation bound for the Gaussian shift is $\lim n^{-1}\log\Phi(-\sqrt{n}\kappa_{ij}) = -\kappa_{ij}^2/2$, and no alternative procedure improves the exponential rate.
+
+(ii) Follows from the exponential family structure: the density $p(z;\kappa_{ij}) = \phi(z-\kappa_{ij})$ has canonical parameter $\kappa_{ij}$ and sufficient statistic $Z$, so all parametric functionals depend on the sampling distribution only through $\kappa_{ij}$.
+\end{proof}
+
+Lemma~1 justifies $\kappa_{ij}$ as the canonical index: while one could define many measures of distinguishability---the absolute gap $|T_i^\infty - T_j^\infty|$, the variance $\sigma_{ij}^2$, or the unnormalized difference---only the standardized ratio $\kappa_{ij}$ determines the optimal misranking rate at the LAN limit. The variance alone cannot characterize misranking without the population gap, and the gap alone cannot without the noise scale; their ratio is the unique summary achieving the optimal exponential rate.
+
+\subsection{Main theorem}
+
+\begin{theorem}[Misalignment phase transition]\label{thm:main}
+Let $\mathcal{M}$ satisfy Assumptions~1--4.
+
+\begin{enumerate}
+\item[(i)] \textbf{Structural regime.} If $k_T^* \neq k_D^*$, then $\Delta_n(T) \to \Delta_{\text{struct}}$ as $n\to\infty$, where $\Delta_{\text{struct}} > 0$ (Appendix~1). The index $\kappa$ is uninformative because the population ranking differs.
+
+\item[(ii)] \textbf{Local regime.} If $k_T^* = k_D^*$, then $\Delta_n(T) \to 0$ with rate bounded by
+\[
+\Delta_n(T) \leq 2(m-1) \exp\!\left(-\frac{n\kappa^2}{2}\right) + o(n^{-1/2}),
+\]
+where $\kappa = \min_{j\neq k^*} \kappa_{jk^*}$. The exponential rate $-\kappa^2/2$ is sharp (Chernoff, 1952); the pre-factor $2(m-1)$ may be conservative under correlated competitors.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Part (i) follows from Appendix~1. For (ii), since $k_T^* = k_D^*$, the population limits agree, so misalignment arises solely from finite-sample fluctuations. By Assumption~2,
+\[
+T_{k,n} = T_k^\infty + n^{-1}\textstyle\sum_{i=1}^n \psi_k(Z_i) + o_p(n^{-1/2}).
+\]
+For any competitor $j \neq k^*$, the ranking reversal probability satisfies
+\[
+\pr(T_{j,n} < T_{k^*,n} \mid T_j^\infty > T_{k^*}^\infty) \leq \Phi(-\sqrt{n}\kappa_{jk^*}) \leq \exp(-n\kappa_{jk^*}^2/2)
+\]
+by Proposition~1. Under Assumption~4, an analogous bound for risk reversals follows from the CLT for sample means. Taking a union bound over $m-1$ competitors gives the stated rate:
+\[
+\Delta_n(T) \leq \sum_{j\neq k^*} \bigl\{\pr(T_{j,n} < T_{k^*,n}) + \pr(D_{j,n} < D_{k^*,n})\bigr\}
+\leq 2(m-1)\exp(-n\kappa^2/2) + o(n^{-1/2}).
+\]
+The $o(n^{-1/2})$ remainder collects the Bahadur and CLT approximation errors. The exponential rate $-\kappa^2/2$ is unaffected by the union bound pre-factor: even as $m$ grows, the rate remains governed by the minimum comparison index $\kappa$.
+
+In high-dimensional settings where $m = O(n^\alpha)$ for $\alpha>0$, the bound remains meaningful provided $\kappa^2/2 > \alpha\log n / n$, i.e., the exponential decay overcomes the logarithmic growth in the number of competitors. When $m$ grows exponentially in $n$, the bound becomes vacuous unless $\kappa^2/2$ exceeds the growth rate of $\log m/n$, a condition analogous to the restricted eigenvalue condition in high-dimensional regression.
+\end{proof}
+
+\begin{remark}[Second-order refinement]\label{rem:second}
+Under the Gaussian shift experiment of Proposition~1, the misranking probability admits a higher-order expansion
+\[
+\pr(T_{j,n} < T_{i,n}) = \Phi(-\kappa_{ij}) + n^{-1/2}\kappa_{ij}\,\phi(\kappa_{ij})\,B_{ij} + O(n^{-1}),
+\]
+where $B_{ij}$ collects the third-order cumulants of the influence functions $\psi_i,\psi_j$. The leading correction vanishes when the influence functions are symmetric, which occurs for $M$-estimators with symmetric error distributions. This refinement shows that while $\kappa_{ij}$ determines the exponential rate, the sub-leading constant can depend on the specific functional form of $T$.
+\end{remark}
+
+\subsection{Example 2: AIC for nested models}
+
+The Akaike information criterion is $T_{k,n} = \log L_k - p_k$, where $L_k$ is the maximized likelihood and $p_k$ the number of parameters. For linear regression with Gaussian errors, the difference between a full model ($p$ features) and a restricted model ($s$ features) is
+\[
+T_{f,n} - T_{r,n} = n(\log\hat\sigma_f^2 - \log\hat\sigma_r^2) - 2(p-s),
+\]
+where $\hat\sigma_k^2$ is the residual variance estimate. Table~1 shows the $\kappa$--$\Delta$ relationship for this setting: as $p$ grows, the penalty $2(p-s)$ dominates and $\kappa$ increases, driving $\Delta$ to zero.
+
+\begin{table}[ht]
+\tbl{AIC comparison: restricted ($s=3$) versus full ($p$) models, $n=500$}
+{\begin{tabular}{crr}
+$p$ & $\Delta$ & $\hat\kappa$ \\ \hline
+10 & 0.210 & 1.81 \\
+20 & 0.076 & 2.20 \\
+50 & 0.008 & 3.05 \\
+100 & 0.000 & 3.49 \\
+\end{tabular}}
+\label{tab:aic}
+\end{table}
+
+For nested models, $\kappa_{ij}$ can be expressed through the non-centrality parameter $\delta$ of the likelihood ratio statistic: $\kappa_{ij} \approx |\delta - d|/\{2\Var(\chi^2_d(\delta))\}^{1/2}$, where $d=p-s$. Selection is reliable when $\delta$ is large relative to $d$, and unreliable near $\delta \approx d$. Detailed derivations appear in the Supplementary Material.
+
+\subsection{Generality}
+
+The framework applies to any scalar selection functional with a Bahadur-type expansion: AIC, BIC, CV, and WAIC all induce the same Gaussian comparison structure. The bias-crossing versus competition dichotomy is universal: any marginal summary faces both a structural floor and a finite-sample resolution limit. An illustration with training MSE is given in Appendix~3.
+
+\section{Example 1: Conformal prediction width}
+
+\subsection{Assumption verification}
+
+In split conformal prediction \citep{Lei:2018}, the data are split into training, calibration and test sets. For estimator $k$, $\hat f_{k,n}$ is fitted on the training set; calibration residuals $r_{k,i} = |Y_i - \hat f_{k,n}(X_i)|$ are computed. The CP width is $\hat R_{k,n} = 2\hat Q_{1-\alpha}(\{r_{k,i}\})$ with $\hat Q_{1-\alpha}$ the empirical $(1-\alpha)$-quantile. Throughout we take $\alpha = 0.1$. Risk is estimated as $\hat D_{k,n} = n_{\text{te}}^{-1}\sum_{i=1}^{n_{\text{te}}} (Y_i - \hat f_{k,n}(X_i))^2$.
+
+Assumption~1 holds for $M$-estimators (OLS, Ridge, Lasso) and is heuristic for tree-based methods. Assumption~2 holds with $T_k^\infty = R_k^\infty$ and $\psi_k$ the influence function of the $(1-\alpha)$-quantile of absolute residuals \citep{Bahadur:1966}: for residuals with density $f_k$ at the quantile,
+\[
+\psi_k(r) = \frac{\alpha - \mathbf{1}\{r \leq q_{1-\alpha}\}}{f_k(q_{1-\alpha})}.
+\]
+Assumption~4 holds because calibration and test residuals are conditionally independent given the training fit, so the covariance $\Sigma$ captures correlations across estimators.
+
+\subsection{Comparison index}
+
+The comparison index for CP width specializes to
+\[
+\kappa_{ij} = \frac{|R_i^\infty - R_j^\infty|}{\sigma_{ij}},\qquad
+\sigma_{ij}^2 = \lim_{n\to\infty} n \,\Var(\hat R_{i,n} - \hat R_{j,n}).
+\]
+
+\begin{corollary}[Dependence modulation]\label{cor:dep}
+Under block-equicorrelated predictors, $\partial\kappa/\partial\rho < 0$ for sets containing both linear and tree-based estimators, implying $\partial\Delta_n/\partial\rho > 0$. For purely linear sets, $\partial\kappa/\partial\rho \approx 0$.
+\end{corollary}
+
+\subsection{Diagnosing regime membership}
+
+Because $\kappa$ is informative only in the local regime ($k_T^* = k_D^*$), we propose a split-sample diagnostic:
+\begin{enumerate}
+\item Randomly split the data into two halves $S_1$ and $S_2$.
+\item On each half, compute the CP ranking and the risk ranking of the candidate estimators.
+\item For each half, compute the disagreement proportion $d_h = \mathbb{I}\{\arg\min \hat R \neq \arg\min \hat D\}$.
+\item If $d_1 > 0.5$ and $d_2 > 0.5$, flag potential bias-crossing and interpret $\hat\kappa$ with caution.
+\end{enumerate}
+The 0.5 threshold corresponds to worse-than-random agreement, a strong signal of structural disagreement. This procedure is conservative: it may flag borderline competition cases as uncertain when sample sizes are too small to resolve rankings, but it rarely misses genuine bias-crossing at moderate $n$. For $m > 2$ estimators, use the pairwise disagreement proportion averaged over all pairs. While not a formal statistical test, this provides a practical safeguard when interpreting $\hat\kappa$. A bootstrap-based formal test is left to future work.
+
+\section{Empirical illustration}
+
+We illustrate the theory for CP width. Additional results appear in the Appendix.
+
+\subsection{Competition channel}
+
+\textbf{Design.} Linear DGP $y = X\beta + \varepsilon$, $p=50$, $s=3$ non-zero coefficients. Two unbiased OLS estimators: full ($p$ features) versus restricted ($s$ features). As $p$ increases, the variance gap grows, increasing $\kappa$.
+
+\begin{table}
+\tbl{Competition channel: $\kappa$ and $\Delta$ across model sizes}
+{\begin{tabular}{crrr}
+$p$ & $\Delta$ & SE & $\hat\kappa$ \\ \hline
+10 & 0.450 & 0.022 & 1.65 \\
+20 & 0.250 & 0.019 & 1.60 \\
+50 & 0.080 & 0.012 & 1.94 \\
+100 & 0.008 & 0.004 & 3.21
+\end{tabular}}
+\label{tab:comp}
+\end{table}
+
+At $\kappa = 1.65$, misalignment is substantial ($\Delta = 0.45$); at $\kappa = 3.21$, selection is nearly perfect ($\Delta = 0.008$).
+
+\subsection{Dependence modulation}
+
+\textbf{Design.} OLS versus Random Forest, $n = 300$, block-equicorrelated predictors \citep{Hastie:2009}. Block correlation $\rho$ compresses RF variance asymmetrically.
+
+\begin{table}
+\tbl{Dependence modulation: OLS versus RF}
+{\begin{tabular}{cccccc}
+$\rho$ & $\hat R_{\text{OLS}}$ & $\hat R_{\text{RF}}$ & $\hat\kappa$ & $\Delta$ & SE \\ \hline
+0.00 & 4.03 & 4.54 & 1.26 & 0.275 & 0.032 \\
+0.25 & 4.04 & 4.46 & 1.16 & 0.305 & 0.033 \\
+0.50 & 3.99 & 4.28 & 1.14 & 0.320 & 0.033 \\
+0.75 & 3.97 & 4.04 & 0.87 & 0.405 & 0.035
+\end{tabular}}
+\label{tab:dep}
+\end{table}
+
+As $\rho$ increases from $0$ to $0.75$, the gap narrows by a factor of $7$, $\kappa$ drops from $1.26$ to $0.87$, and $\Delta$ rises from $0.275$ to $0.405$. A symmetric control with OLS versus Ridge (Appendix~2) shows no such effect.
+
+\subsection{Decay experiment}
+
+\textbf{Design.} OLS full ($p=20$) versus OLS restricted ($s=3$), $n$ from 50 to 2000. The restricted estimator is misspecified, ensuring a non-vanishing asymptotic gap.
+
+\begin{figure}
+\figuresize{.6}
+\figurebox{15pc}{20pc}{}[fig_decay.png]
+\caption{$\Delta(n)$ trajectory (left axis) and $\hat\kappa$ (right axis) for the decay experiment. $\hat\kappa$ mirrors the non-monotonic trajectory of $\Delta$. The horizontal dotted line marks $\kappa=2$.}
+\label{fig:decay}
+\end{figure}
+
+\textbf{Results.} This experiment illustrates the competition window (\S2). At $n=50$, $\Delta \approx 0$ because the restricted estimator is clearly worse. As $n$ enters the competition window (100--200), the full estimator's variance shrinks, narrowing the effective gap and raising $\Delta$ to $\sim 0.37$---the worst misalignment occurs at intermediate $n$, not small $n$. At $n \geq 500$, dominance re-emerges and $\Delta$ decays. The estimated $\hat\kappa$ mirrors this non-monotonicity: $2.68$ at $n=50$, $0.93$ at $n=100$ (bottom of the competition window), $2.87$ at $n=1000$. Population $\kappa$ from $n_{\text{MC}} = 20000$ grows monotonically from $0.83$ to $3.37$, confirming that the non-monotonicity is a finite-sample phenomenon captured by the plug-in estimator rather than a property of the population index.
+
+\subsection{Real-data validation}
+
+\textbf{Design.} Diabetes ($n=442$, $p=10$) and California housing ($n=1000$, $p=8$), OLS versus Ridge.
+
+\begin{table}
+\tbl{Real-data validation}
+{\begin{tabular}{lcrrr}
+Dataset & $n$ & $\Delta$ & $\hat\kappa$ & $\hat\kappa_{\text{KDE}}$ \\ \hline
+Diabetes & 100 & 0.340 & 0.78 & 1.15 \\
+Diabetes & 200 & 0.244 & 1.01 & 1.30 \\
+Diabetes & 442 & 0.208 & 1.00 & 1.28 \\
+Housing & 100 & 0.402 & 1.41 & 1.18 \\
+Housing & 200 & 0.452 & 1.90 & 1.35 \\
+Housing & 500 & 0.492 & 2.50 & 1.76 \\
+Housing & 1000 & 0.470 & 3.74 & 2.71
+\end{tabular}}
+\label{tab:real}
+\begin{tabnote}
+Housing $n=1000$ enters the bias-crossing regime: the CP gap is $<0.001$, yet Ridge has a systematic risk advantage in $74.6\%$ of replicates.
+\end{tabnote}
+\end{table}
+
+On diabetes, $\kappa$ increases with $n$ while $\Delta$ decreases. On housing, $\kappa$ ranges from $1.41$ to $3.74$. At $n=1000$, housing enters the bias-crossing regime: Ridge regularizes more effectively at large $n$, but CP width cannot reflect this bias advantage.
+
+\subsection{Baseline comparison}
+
+Table~5 compares $\kappa$ to the CV-normalized gap $|\text{CV}_i - \text{CV}_j| / (\text{SE}_i^2 + \text{SE}_j^2)^{1/2}$ as a predictor of $\Delta$. The CV gap shows near-zero correlation with $\Delta$, while $\kappa$ is consistently negatively correlated across all sample sizes.
+
+\begin{table}
+\tbl{CV comparison}
+{\begin{tabular}{crrr}
+$n$ & $\Delta$ & $r(\kappa,\Delta)$ & $r(\text{CV},\Delta)$ \\ \hline
+100 & 0.429 & $-0.150$ & $0.003$ \\
+200 & 0.387 & $-0.101$ & $-0.019$ \\
+500 & 0.076 & $-0.273$ & $0.080$ \\
+1000 & 0.013 & $-0.215$ & $0.017$
+\end{tabular}}
+\label{tab:cv}
+\end{table}
+
+\section{Estimation}
+
+The plug-in estimator $\hat\kappa$ targets $\sqrt{n_{\text{cal}}}\cdot\kappa$. From calibration residuals:
+\begin{enumerate}
+\item Compute $\hat R_k = 2\cdot\text{Quantile}_{1-\alpha}(\{r_{k,i}\})$.
+\item Estimate $\hat\sigma_k = \text{Std}(\{y_i - \hat f_k(x_i)\})$ from raw residuals.
+\item Compute $\hat f_k = 2\phi(z_{0.95})/\hat\sigma_k$, the normal plug-in density.
+\item $\widehat{\Var}(\hat R_k) = 4\alpha(1-\alpha)/(n_{\text{cal}}\hat f_k^2)$.
+\item For each pair $(i,j)$, compute Spearman correlation $\hat\rho_{ij}$ of absolute residuals, then
+\[
+\hat\sigma_{ij}^2 = \widehat{\Var}(R_i) + \widehat{\Var}(R_j) - 2\hat\rho_{ij}\{\widehat{\Var}(R_i)\widehat{\Var}(R_j)\}^{1/2}.
+\]
+\item $\hat\kappa = \min_{i<j} |\hat R_i - \hat R_j|/\hat\sigma_{ij}$.
+\end{enumerate}
+The cost is $O(m n_{\text{cal}} + m^2)$; no bootstrap is needed. The estimator is consistent under Assumptions~1--4: the Bahadur representation guarantees $\hat\kappa \xrightarrow{p} n_{\text{cal}}^{1/2}\kappa$, and the Spearman correlation consistently estimates the residual dependence.
+
+In the bias-crossing regime, $\hat\kappa$ does not characterize $\Delta$ because the structural term $\Delta_{\text{struct}}$ dominates. This is not a failure of the estimator but an inherent boundary of the comparison index: $\kappa$ governs only the local Gaussian comparison, not the structural disagreement in the population argmins.
+
+\section{Discussion}
+
+The comparison index $\kappa$ characterizes when a scalar selection functional preserves risk ordering. The analysis reveals a fundamental distinction between uncertainty quantification and decision diagnostics: coverage validity does not guarantee reliable ranking.
+
+The CP literature has emphasized validity after selection \citep{Yang:2024,Hegazy:2025,Liang:2026}, while model selection focuses on risk estimation. Alignment between the two has received little attention. A confidence interval asks whether a parameter is estimated accurately; the comparison index asks whether two estimators are distinguishable by the selection functional. These are different statistical objects: estimators with narrow individual intervals can be too close to rank reliably, while estimators with wide intervals can be well-separated. The CV 1-SE rule \citep{Hastie:2009} assesses the former; $\kappa$ assesses the latter.
+
+The competition mechanism is not unique to CP width. Any scalar selection criterion---AIC, BIC, CV, WAIC---induces the same Gaussian comparison structure and incurs the same resolution-reliability tension. The bias-crossing versus competition dichotomy is universal: bias crossing is the structural floor of any marginal summary, while competition governs its finite-sample reliability. Extending $\kappa$ to these criteria requires only verifying Assumption~2 for the corresponding functional.
+
+Assumptions~1--4 hold for $M$-estimators but are heuristic for tree-based methods. While a formal verification for tree-based estimators is beyond the present scope, the empirical agreement between $\hat\kappa$ and $\Delta$ across Random Forest, XGBoost and SVR (Appendix~3) suggests the index may be more broadly applicable; this provides a direction for future theoretical extension. The index $\kappa$ is predictive only when the population argmins agree (Theorem~1); under bias crossing, $\hat\kappa$ is uninformative. The split-sample diagnostic of \S4.3 provides a practical safeguard; developing a formal statistical test for regime membership is left to future work, along with extensions to classification and distribution shift. The results suggest a distinction between uncertainty quantification and decision diagnostics: coverage validity does not guarantee reliable ranking, and $\kappa$ quantifies the resolution needed for the latter.
+
+\section*{Data availability}
+The real datasets used in \S6 and Appendix~3---Boston Housing, Concrete Compressive Strength, Abalone and Wine Quality---are publicly available from the UCI Machine Learning Repository \citep[\href{https://archive.ics.uci.edu}{https://archive.ics.uci.edu}]{UCI:2025}.  Simulation code is available at \href{https://github.com/wyp629929/A-comparison-index-for-functional-ranking-in-model-selection}{github.com/wyp629929/functional-ranking}.
+
+\section*{Declaration of the use of generative AI and AI-assisted technologies}
+During the preparation of this work the author used Claude Code (Anthropic) in order to assist with coding, editing and literature review. After using this tool the author reviewed and edited the content as necessary and takes full responsibility for the content of the publication.
+
+\section*{Supplementary material}
+The Supplementary Material contains the detailed derivation of the nested-model AIC comparison (Section~S1) and pseudocode for the $\hat\kappa$ estimation algorithm (Section~S2).
+
+\appendix
+\appendixone
+\section*{Appendix 1: Bias-crossing lower bound}
+
+Here we interpret $T_k^\infty$ and $D_k^\infty$ as the population limits conditional on the covariate $X=x$; the marginal scalar limits of \S2 are recovered by averaging over $\mathcal{X}$. This conditional perspective is necessary because bias-crossing arises from the covariate distribution: an estimator may be conditionally better for some $x$ and worse for others.
+
+Let $k_T^* \neq k_D^*$, so $\argmin_k T_k^\infty \neq \argmin_k D_k^\infty$. Then there exists at least one pair $(i,j)$ with $T_i^\infty(x) < T_j^\infty(x)$ but $D_i^\infty(x) > D_j^\infty(x)$ for $x$ in a set of positive probability. Define the population disagreement set
+\[
+\mathcal{S} = \{x \in \mathcal{X} : T_i^\infty(x) < T_j^\infty(x),\; D_i^\infty(x) > D_j^\infty(x)\},
+\]
+which has positive probability under the covariate distribution. Because $\hat T_{k,n}$ and $\hat D_{k,n}$ are consistent for $T_k^\infty$ and $D_k^\infty$ under Assumptions~1--4, the continuous mapping theorem gives
+\[
+\pr(\hat T_i < \hat T_j,\; \hat D_i > \hat D_j) \geq \pr(X \in \mathcal{S}) - \varepsilon_n,
+\]
+where $\varepsilon_n \to 0$ as $n\to\infty$ uniformly over compact sets. Hence
+\[
+\liminf_{n\to\infty} \Delta_n(T) \geq \pr(X \in \mathcal{S}) > 0,
+\]
+establishing that $\Delta_n(T)$ cannot vanish asymptotically. This lower bound is sharp: it depends only on the probability of the disagreement region, not on the specific functional forms of $T$ and $D$.
+
+%% Reduce spacing between appendix tables
+\setlength{\floatsep}{4pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{4pt plus 2pt minus 2pt}
+
+\appendixtwo
+\section*{Appendix 2: Additional experiments}
+
+\textbf{Symmetric control.} OLS versus Ridge, $n=300$, same design as \S5.2.
+
+\begin{table}[ht]
+\tbl{Symmetric control: OLS versus Ridge}
+{\begin{tabular}{cccccc}
+$\rho$ & $\hat R_{\text{OLS}}$ & $\hat R_{\text{Ridge}}$ & $\hat\kappa$ & $\Delta$ & SE \\ \hline
+0.00 & 3.96 & 3.94 & 2.40 & 0.270 & 0.026 \\
+0.25 & 3.93 & 3.90 & 2.38 & 0.300 & 0.026 \\
+0.50 & 3.96 & 3.93 & 2.37 & 0.267 & 0.026 \\
+0.75 & 3.96 & 3.90 & 2.73 & 0.130 & 0.019
+\end{tabular}}
+\end{table}
+
+The CP gap remains stable and $\Delta$ does not increase with $\rho$, confirming that dependence modulates $\Delta$ through asymmetric variance sensitivity.
+
+\textbf{Non-normal residuals.} Repeat the decay experiment with three residual distributions: $N(0,1)$ (baseline), $t_5/\sqrt{5/3}$ (heavy-tailed), and $(\Gamma(2,1)-2)/\sqrt{2}$ (skewed).
+
+\begin{table}[ht]
+\tbl{Non-normal residuals}
+{\begin{tabular}{lcrr}
+$n$ & Distribution & $\hat\kappa$ & $r(\kappa,\Delta)$ \\ \hline
+100 & Normal & 0.96 & $-0.13$ \\
+100 & $t_5$ & 0.94 & $-0.03$ \\
+100 & Skewed & 1.01 & $-0.16$ \\
+500 & Normal & 1.77 & $-0.30$ \\
+500 & $t_5$ & 2.05 & $-0.31$ \\
+500 & Skewed & 2.41 & $-0.27$ \\
+1000 & Normal & 2.88 & $-0.19$ \\
+1000 & $t_5$ & 3.33 & $-0.23$ \\
+1000 & Skewed & 4.47 & $-0.12$
+\end{tabular}}
+\end{table}
+
+Heavy-tailed residuals produce $\hat\kappa$ within $15\%$ of normal at all $n$; skewness inflates $\hat\kappa$ at $n=1000$ but the effect is negligible at moderate $n$.
+
+\appendixthree
+\section*{Appendix 3: Additional results}
+
+\textbf{CP level sensitivity.}
+\begin{table}[ht]
+\tbl{$\alpha$ sensitivity}
+{\begin{tabular}{ccrr}
+$\alpha$ & $n$ & $\hat\kappa$ & $r(\kappa,\Delta)$ \\ \hline
+0.05 & 100 & 0.84 & $-0.10$ \\
+0.05 & 500 & 1.63 & $-0.31$ \\
+0.05 & 1000 & 2.76 & $-0.26$ \\
+0.10 & 100 & 0.96 & $-0.10$ \\
+0.10 & 500 & 1.76 & $-0.28$ \\
+0.10 & 1000 & 2.89 & $-0.17$ \\
+0.20 & 100 & 0.91 & $-0.20$ \\
+0.20 & 500 & 1.70 & $-0.28$ \\
+0.20 & 1000 & 2.89 & $-0.20$
+\end{tabular}}
+\end{table}
+
+{\small
+\textbf{Estimator robustness.}
+\begin{table}[ht]
+\tbl{Estimator robustness}
+{\begin{tabular}{lcrr}
+Estimator & $n$ & $\hat\kappa$ & $r(\kappa,\Delta)$ \\ \hline
+Lasso & 100 & 1.25 & $-0.36$ \\
+Lasso & 500 & 1.15 & $-0.10$ \\
+Lasso & 1000 & 1.34 & $-0.18$ \\
+SVR & 100 & 1.41 & $-0.28$ \\
+SVR & 500 & 2.82 & $-0.18$ \\
+SVR & 1000 & 3.43 & $-0.25$ \\
+XGBoost & 100 & 1.27 & $-0.36$ \\
+XGBoost & 500 & 2.96 & $-0.20$ \\
+XGBoost & 1000 & 3.88 & $-$
+\end{tabular}}
+\end{table}
+
+\textbf{Additional datasets.}
+\begin{table}[ht]
+\small
+\tbl{Additional real data}
+{\begin{tabular}{lcrr}
+Dataset & $n$ & $\Delta$ & $\kappa$ \\ \hline
+Boston & 200 & 0.447 & 2.16 \\
+Boston & 500 & 0.453 & 2.23 \\
+Concrete & 200 & 0.510 & 2.39 \\
+Concrete & 500 & 0.570 & 3.11 \\
+Concrete & 1000 & 0.450 & 4.84 \\
+Abalone & 200 & 0.383 & 1.45 \\
+Abalone & 500 & 0.470 & 1.63 \\
+Abalone & 1000 & 0.490 & 1.84 \\
+Wine & 200 & 0.413 & 1.57 \\
+Wine & 500 & 0.437 & 1.92 \\
+Wine & 1000 & 0.483 & 2.36
+\end{tabular}}
+\end{table}
+
+}  % end of {\small
+
+\clearpage
+
+\textbf{Training MSE as selection functional.}
+\begin{table}[h!]
+\small
+\tbl{Training MSE versus test MSE}
+{\begin{tabular}{crr}
+$n$ & $\Delta$ & $\kappa$ \\ \hline
+100 & 0.680 & 3.11 \\
+500 & 0.020 & 4.81 \\
+1000 & 0.000 & 6.39
+\end{tabular}}
+\end{table}
+
+The $\kappa$--$\Delta$ relationship mirrors the CP-width case, confirming that the theory applies beyond conformal prediction.
+
+\section*{Acknowledgement}
+The author thanks the editor, associate editor and referees for their constructive comments.
+
+\bibliographystyle{biometrika}
+\bibliography{paper-ref}
+
+\end{document}

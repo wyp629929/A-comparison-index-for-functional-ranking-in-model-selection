@@ -1,0 +1,84 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb}
+\usepackage[margin=1in]{geometry}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\pr}{pr}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\AVar}{AVar}
+
+\begin{document}
+\centerline{\bf\large Supplementary Material for}
+\vspace{2mm}
+\centerline{\bf\large ``A comparison index for functional ranking in model selection''}
+\vspace{2mm}
+\centerline{Yaoping~Wang, Rutgers University}
+\vspace{5mm}
+
+\section*{S1.  Nested model derivation for AIC}
+\label{sec:aic-detail}
+
+This section provides the derivation underlying the approximation in \S3.5 of the main paper.  Let the full model have $p$ parameters and the restricted model have $s<p$ parameters.  The AIC difference is
+\[
+T_{f,n} - T_{r,n} = n(\log\hat\sigma_f^2 - \log\hat\sigma_r^2) - 2(p-s),
+\]
+where $\hat\sigma_k^2$ are the residual variance estimates.
+
+Under the Gaussian likelihood, $n\hat\sigma_r^2$ and $n\hat\sigma_f^2$ are distributed as $\chi^2_{n-p}$ and $\chi^2_{n-s}$ respectively under the null that the restricted model is correct.  The log-likelihood ratio statistic $\ell_n = n\log(\hat\sigma_r^2/\hat\sigma_f^2)$ follows a non-central chi-squared distribution asymptotically:
+\[
+\ell_n \;\xrightarrow{d}\; \chi^2_{d}(\delta), \qquad d = p-s,
+\]
+where $\delta$ is the non-centrality parameter.  For fixed local alternatives, $\delta = O(1)$; for fixed alternatives, $\delta$ grows linearly with $n$.
+
+Because the AIC penalty subtracts $2d$, the centred AIC difference is $\ell_n - 2d$.  Writing $\ell_n = \delta + Z$ where $\Var(Z) \approx 2(2\delta + d)$ for the non-central chi-squared distribution, we have
+\[
+E(T_{f,n} - T_{r,n}) \approx \delta - 2d, \qquad
+\Var(T_{f,n} - T_{r,n}) \approx 4(2\delta + d).
+\]
+
+The comparison index $\kappa_{fr}$ is therefore
+\[
+\kappa_{fr} = \frac{|E(T_f - T_r)|}{\{\AVar(T_f - T_r)\}^{1/2}}
+           \approx \frac{|\delta - 2d|}{\{4(2\delta + d)\}^{1/2}}
+           = \frac{|\delta - 2d|}{2\sqrt{2\delta + d}}.
+\]
+
+When $\delta$ is large relative to $d$, the penalty $2d$ is negligible and $\kappa \approx \sqrt{\delta/2}$, giving rapid exponential decay of misranking.  When $\delta \approx 2d$, the numerator vanishes and the functionals become locally indistinguishable: this is the competition regime for AIC-based selection.  Near this point, the misranking rate is $\exp(-n\kappa^2/2) \approx 1$ for moderate $n$, so the selection is essentially random between the two models.
+
+\section*{S2.  Pseudocode for $\hat\kappa$ estimation}
+\label{sec:alg}
+
+The plug-in estimator $\hat\kappa$ targets $\sqrt{n_{\text{cal}}}\cdot\kappa$ and is computed from calibration residuals without bootstrap.
+
+\begin{center}
+\fbox{\parbox{0.85\textwidth}{
+\vspace{2mm}
+\textbf{Algorithm:} $\hat\kappa$ estimation from calibration data \\
+\vspace{2mm}
+\textbf{Input:} calibration set $\{(x_i,y_i)\}_{i=1}^{n_{\text{cal}}}$, fitted estimators $\{\hat f_k\}_{k=1}^m$, level $\alpha$ \\
+\textbf{Output:} comparison index $\hat\kappa$ \\
+\vspace{2mm}
+\begin{enumerate}
+  \item[\textbf{1.}] For each estimator $k$, compute calibration residuals $r_{k,i} = |y_i - \hat f_k(x_i)|$.
+  \item[\textbf{2.}] Compute CP width: $\hat R_k = 2\cdot Q_{1-\alpha}(\{r_{k,i}\})$, where $Q_{1-\alpha}$ is the empirical quantile.
+  \item[\textbf{3.}] Estimate residual scale: $\hat\sigma_k = \operatorname{Std}(\{y_i - \hat f_k(x_i)\})$.
+  \item[\textbf{4.}] Normal plug-in density: $\hat f_k = 2\phi(z_{1-\alpha/2})/\hat\sigma_k$, where $\phi$ is the standard normal density.
+  \item[\textbf{5.}] Variance estimate: $\widehat{\Var}(\hat R_k) = 4\alpha(1-\alpha)/(n_{\text{cal}}\hat f_k^2)$.
+  \item[\textbf{6.}] For each pair $(i,j)$:
+    \begin{itemize}
+      \item Compute Spearman correlation $\hat\rho_{ij}$ of absolute residual vectors $(r_{i,\cdot}, r_{j,\cdot})$.
+      \item $\hat\sigma_{ij} = \{\widehat{\Var}(\hat R_i) + \widehat{\Var}(\hat R_j) - 2\hat\rho_{ij}\sqrt{\widehat{\Var}(\hat R_i)\widehat{\Var}(\hat R_j)}\}^{1/2}$.
+    \end{itemize}
+  \item[\textbf{7.}] $\hat\kappa = \min_{i<j} |\hat R_i - \hat R_j| / \hat\sigma_{ij}$.
+\end{enumerate}
+\vspace{2mm}
+\textbf{Complexity:} $O(mn_{\text{cal}} + m^2)$.  No bootstrap or cross-validation required.
+}}
+\end{center}
+
+The variance formula in Step~5 follows from the Bahadur (1966) influence function for the quantile.  The Spearman correlation in Step~6 provides a robust rank-based estimate of the residual dependence between estimators, which suffices because only the sign and approximate magnitude of the correlation affect $\hat\sigma_{ij}$.  The estimator is consistent under the conditions of Assumptions~1--4.
+
+\section*{References}
+
+Bahadur, R. R. (1966). A note on quantiles in large samples. \textit{Ann. Math. Statist.}, 37:577--580.
+
+\end{document}
