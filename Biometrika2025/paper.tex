@@ -284,7 +284,7 @@ At $\kappa = 1.65$, misalignment is substantial ($\Delta = 0.45$); at $\kappa = 
 \begin{table}
 \tbl{Dependence modulation: OLS versus RF}
 {\begin{tabular}{cccccc}
-$\rho$ & $\widehat{R}_{\text{OLS}}$ & $\widehat{R}_{\text{RF}}$ & $\hat\kappa$ & $\Delta$ & SE \\ \hline
+$\rho$ & $R_{\text{OLS}}$ & $R_{\text{RF}}$ & $\hat\kappa$ & $\Delta$ & SE \\ \hline
 0.00 & 4.03 & 4.54 & 1.26 & 0.275 & 0.032 \\
 0.25 & 4.04 & 4.46 & 1.16 & 0.305 & 0.033 \\
 0.50 & 3.99 & 4.28 & 1.14 & 0.320 & 0.033 \\
@@ -385,6 +385,7 @@ During the preparation of this work the author used Claude Code (Anthropic) in o
 \section*{Supplementary material}
 The Supplementary Material contains the detailed derivation of the nested-model AIC comparison (Section~S1) and pseudocode for the $\hat\kappa$ estimation algorithm (Section~S2).
 
+\renewcommand{\tablename}{Table}
 \appendix
 \appendixone
 \section*{Appendix 1: Bias-crossing lower bound}
@@ -417,7 +418,7 @@ establishing that $\Delta_n(T)$ cannot vanish asymptotically. This lower bound i
 \begin{table}[ht]
 \tbl{Symmetric control: OLS versus Ridge}
 {\begin{tabular}{cccccc}
-$\rho$ & $\widehat{R}_{\text{OLS}}$ & $\widehat{R}_{\text{Ridge}}$ & $\hat\kappa$ & $\Delta$ & SE \\ \hline
+$\rho$ & $R_{\text{OLS}}$ & $R_{\text{Ridge}}$ & $\hat\kappa$ & $\Delta$ & SE \\ \hline
 0.00 & 3.96 & 3.94 & 2.40 & 0.270 & 0.026 \\
 0.25 & 3.93 & 3.90 & 2.38 & 0.300 & 0.026 \\
 0.50 & 3.96 & 3.93 & 2.37 & 0.267 & 0.026 \\
@@ -510,12 +511,7 @@ Wine & 1000 & 0.483 & 2.36
 
 }  % end of {\small
 
-\clearpage
-
-\textbf{Training MSE as selection functional.}
-
 \begin{table}[h!]
-\small
 \tbl{Training MSE versus test MSE}
 {\begin{tabular}{crr}
 $n$ & $\Delta$ & $\kappa$ \\ \hline
